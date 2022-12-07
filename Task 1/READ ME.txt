@@ -1,0 +1,3 @@
+This part has a function that takes a directory and read all the filenames in it and
+stores them in a new text file.
+This thing can be used to extract a filename and then work on it.
