@@ -203,7 +203,7 @@ for i in range(len(filenames)):
         tokenize_content = [i for i in tokenize_title if re.sub(r'[^\w\s]', "", i)]
 
         for i in range(len(tokenize_title)):
-            tokenize_title[i] = tokenize_title[i].lower()
+            # tokenize_title[i] = tokenize_title[i].lower()
             if tokenize_title[i] not in stop_words:
                 ps.stem(tokenize_title[i])
                 if tokenize_title[i] not in lexicon.keys():
@@ -211,7 +211,7 @@ for i in range(len(filenames)):
                     lex_id_generator += 1
 
         for i in range(len(tokenize_content)):
-            tokenize_content[i] = tokenize_content[i].lower()
+            # tokenize_content[i] = tokenize_content[i].lower()
             if tokenize_content[i] not in stop_words:
                 ps.stem(tokenize_content[i])
                 if tokenize_content[i] not in lexicon.keys():
