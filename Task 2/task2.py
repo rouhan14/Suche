@@ -222,3 +222,13 @@ for i in range(len(filenames)):
 
 with open('lexicon.json', 'w') as outfile:
     json.dump(lexicon, outfile)
+
+
+# New Concept:
+# Dictionary k ander dictionary:
+# {docID: [
+#           wordID: { hits: int }
+#           wordID: { hits: int }
+#           wordID: { hits: int }
+#         ]
+# }
