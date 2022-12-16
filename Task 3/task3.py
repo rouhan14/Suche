@@ -6,6 +6,8 @@
 
 # Make a doc_key which contains all the keys of the words that exist in the document (==== First if statement ====)
 # Then increase the hits (==== Second if statement ====)
+# Implementing position too. New scheme: docID: {wordID: {pos: [], hits: integer}}
+
 
 
 import os
@@ -24,6 +26,11 @@ stop_words = set(stopwords.words('english'))
 forward_index = {}
 
 doc_id = 0
+
+
+def wordID_maker(hit, str):
+    wordID = {'pos': [], 'hits': hit, 'type': str}
+    return wordID
 
 lex_file = open(f'D:\\Sem Projects\\DSA Project\\General Shit\\practise\\Task 3\\lexicon.json')
 lex_data = json.load(lex_file)
@@ -54,32 +61,46 @@ for i in range(len(filenames)):
             if word not in stop_words:
                 tokenize_content_less_stop_words.append(word)
 
-        doc_key = {f'{doc_id}': {}}
+        doc_key = {f'{doc_id}': {}}        
 
 
         # Looping for document title
         for i in range(len(tokenize_title_less_stop_words)):
             # Checking if the word in title list exists in the dictionary or not. If it does not then it is updated.
             if tokenize_title_less_stop_words[i] in lex_data.keys() and str(lex_data[f'{tokenize_title_less_stop_words[i]}']) not in doc_key[f'{doc_id}'].keys():   # lex_data has {"word": wordID}
-                doc_key[f'{doc_id}'].update({str(lex_data[f'{tokenize_title_less_stop_words[i]}']): 1})
+                doc_key[f'{doc_id}'].update({str(lex_data[f'{tokenize_title_less_stop_words[i]}']): wordID_maker(0, 'title')})
 
             # Checking if the word in title list exists in the dictionary or not. If it does then it is incremented.
             if str(lex_data[f'{tokenize_title_less_stop_words[i]}']) in doc_key[f'{doc_id}'].keys():
                 temp = str(lex_data[f'{tokenize_title_less_stop_words[i]}'])
-                val = doc_key[f'{doc_id}'][str(temp)] + 1
-                doc_key[f'{doc_id}'][str(temp)] = val
+                val = doc_key[f'{doc_id}'][str(temp)]['hits'] + 1
+                doc_key[f'{doc_id}'][str(temp)]['hits'] = val
+
+            # incrementing the position list now
+            temp2 = str(lex_data[f'{tokenize_title_less_stop_words[i]}'])
+            if str(lex_data[f'{tokenize_title_less_stop_words[i]}']) in doc_key[f'{doc_id}'].keys() and doc_key[f'{doc_id}'][str(temp2)]['type'] == ('title' or 'both'):
+                doc_key[f'{doc_id}'][str(temp)]['pos'].append(i)
 
         # Looping for document content
         for i in range(len(tokenize_content_less_stop_words)):
+            if tokenize_content_less_stop_words[i] in lex_data.keys() and str(lex_data[f'{tokenize_content_less_stop_words[i]}']) in doc_key[f'{doc_id}'].keys() and doc_key[f'{doc_id}'][str(temp)]['type'] == 'title':
+                doc_key[f'{doc_id}'][str(temp)]['type'] = 'both'
+
+
             # Checking if the word in content list exists in the dictionary or not. If it does not then it is updated.
-            if tokenize_content_less_stop_words[i] in lex_data.keys() and str(lex_data[f'{tokenize_content_less_stop_words[i]}']) not in doc_key[f'{doc_id}'].keys():
-                doc_key[f'{doc_id}'].update({str(lex_data[f'{tokenize_content_less_stop_words[i]}']): 1})
+            if tokenize_content_less_stop_words[i] in lex_data.keys() and str(lex_data[f'{tokenize_content_less_stop_words[i]}']) not in doc_key[f'{doc_id}'].keys():   # lex_data has {"word": wordID}
+                doc_key[f'{doc_id}'].update({str(lex_data[f'{tokenize_content_less_stop_words[i]}']): wordID_maker(0, 'content')})
 
             # Checking if the word in content list exists in the dictionary or not. If it does then it is incremented
             if str(lex_data[f'{tokenize_content_less_stop_words[i]}']) in doc_key[f'{doc_id}'].keys():
                 temp = str(lex_data[f'{tokenize_content_less_stop_words[i]}'])
-                val = doc_key[f'{doc_id}'][str(temp)] + 1
-                doc_key[f'{doc_id}'][str(temp)] = val
+                val = doc_key[f'{doc_id}'][str(temp)]['hits'] + 1
+                doc_key[f'{doc_id}'][str(temp)]['hits'] = val
+            
+            # incrementing the position list now
+            temp2 = str(lex_data[f'{tokenize_content_less_stop_words[i]}'])
+            if str(lex_data[f'{tokenize_content_less_stop_words[i]}']) in doc_key[f'{doc_id}'].keys() and doc_key[f'{doc_id}'][str(temp2)]['type'] == 'content' or 'both':
+                doc_key[f'{doc_id}'][str(temp)]['pos'].append(i)
 
         doc_id += 1
         forward_index.update(doc_key)
