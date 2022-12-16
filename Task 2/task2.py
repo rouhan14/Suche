@@ -200,7 +200,7 @@ for i in range(len(filenames)):
         tokenize_title = word_tokenize(sent_title)
         tokenize_content = word_tokenize(sent_content)
         tokenize_title = [i for i in tokenize_title if re.sub(r'[^\w\s]', "", i)]
-        tokenize_content = [i for i in tokenize_title if re.sub(r'[^\w\s]', "", i)]
+        tokenize_content = [i for i in tokenize_content if re.sub(r'[^\w\s]', "", i)]
 
         for i in range(len(tokenize_title)):
             # tokenize_title[i] = tokenize_title[i].lower()
@@ -222,3 +222,13 @@ for i in range(len(filenames)):
 
 with open('lexicon.json', 'w') as outfile:
     json.dump(lexicon, outfile)
+
+
+# New Concept:
+# Dictionary k ander dictionary:
+# {docID: [
+#           wordID: { hits: int }
+#           wordID: { hits: int }
+#           wordID: { hits: int }
+#         ]
+# }
