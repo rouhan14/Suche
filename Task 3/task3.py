@@ -8,6 +8,7 @@
 # Then increase the hits (==== Second if statement ====)
 # Implementing position too. New scheme: docID: {wordID: {pos: [], hits: integer}}
 
+# ==================== Point to ponder upon: --> Do we really need the position of title. It is just damaging the logic of the code. ====================
 
 
 import os
@@ -78,7 +79,7 @@ for i in range(len(filenames)):
 
             # incrementing the position list now
             temp2 = str(lex_data[f'{tokenize_title_less_stop_words[i]}'])
-            if str(lex_data[f'{tokenize_title_less_stop_words[i]}']) in doc_key[f'{doc_id}'].keys() and doc_key[f'{doc_id}'][str(temp2)]['type'] == ('title' or 'both'):
+            if str(lex_data[f'{tokenize_title_less_stop_words[i]}']) in doc_key[f'{doc_id}'].keys() and doc_key[f'{doc_id}'][str(temp2)]['type'] == 'title': # Not doing it for both a would create contradictions
                 doc_key[f'{doc_id}'][str(temp)]['pos'].append(i)
 
         # Looping for document content
