@@ -13,7 +13,7 @@ from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer
 from nltk.stem.wordnet import WordNetLemmatizer
-FOLDER_PATH = r'D:\\Sem Projects\\DSA Project\\General Shit\\practise\\dir'
+FOLDER_PATH = r'D:\\Sem Projects\\DSA Project\\General Shit\\Suche\\dir'
 
 
 def wordID_maker(hit, string):
@@ -40,7 +40,7 @@ doc_id = 0
 start = time.time()
 
 for i in range(len(filenames)):
-    json_file = open(f'D:\\Sem Projects\\DSA Project\\General Shit\\practise\\dir\\{filenames[i]}', 'r')
+    json_file = open(f'D:\\Sem Projects\\DSA Project\\General Shit\\Suche\\dir\\{filenames[i]}', 'r')
 
     data = json.load(json_file)
 
@@ -110,6 +110,25 @@ for i in range(len(filenames)):
         forward_index.update(doc_key)
 
     json_file.close()
+
+
+inverted_index = {}
+
+
+for pavilion in forward_index.keys():
+
+    for wordID in forward_index[pavilion].keys():
+
+        word_barrel = {}
+
+        if wordID not in inverted_index.keys():
+            word_barrel = {wordID: [pavilion]}
+            inverted_index.update(word_barrel)
+        else:
+            inverted_index[wordID].append(pavilion)
+
+with open('invertedIndex.json', 'w') as outfile:
+    json.dump(inverted_index, outfile)
 
 
 with open('lexicon.json', 'w') as outfile:
