@@ -10,7 +10,19 @@ ps = PorterStemmer()
 
 lemaList = ['a', 's', 'r', 'n', 'v']
 
-print([i for i in lemaList])
+# print([i for i in lemaList])
+
+dic1 = {"name": {"Rouhan": {"type": 'title'}, "Rouhan": {"type": 'content'}}}
+
+# temp = {"Rouhan" : {'type': 'content'}}
+
+# dic1["name"].update(temp)
+
+val = 0
+if dic1['name']['Rouhan'].keys() == 'type':
+    print('dsa')
+
+# print()
 
 # for word in demoWords:
     # Left side is the stemmer and the right side is lemmatizer.
