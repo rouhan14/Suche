@@ -31,18 +31,20 @@ for word in word_arr:
     else:
         print('No such word found')
 
-print(list_to_be_disp)
 
+    if (len(list_to_be_disp) != 0):
+        for wordID in range(len(list_to_be_disp)):
+            # print(dic_found[list_to_be_disp[wordID]])
+            if 'title' in dic_found[list_to_be_disp[wordID]].keys():
+                temp = dic_found[list_to_be_disp[wordID]]['title']
+                weight[wordID][1] = 10*temp
 
-if (len(list_to_be_disp) != 0):
-    for wordID in range(len(list_to_be_disp)):
-        if 'title' in dic_found[list_to_be_disp[wordID]]:
-            temp = dic_found[list_to_be_disp[wordID]]['title']
-            weight[wordID][1] = 10*temp
+            if 'content' in dic_found[list_to_be_disp[wordID]]:
+                temp = dic_found[list_to_be_disp[wordID]]['content']
+                weight[wordID][1] += 5*temp
+    
+    list_to_be_disp = []
 
-        if 'content' in dic_found[list_to_be_disp[wordID]]:
-            temp = dic_found[list_to_be_disp[wordID]]['content']
-            weight[wordID][1] += 5*temp
 
 # create an empty dictionary to store the merged lists
 merged_dict = {}
@@ -74,6 +76,7 @@ doc_index_file.close()
 count = 0
 if (len(output_weight) != 0):
     for doc_arr in output_weight:
-        if count == 15:
+        if count == 16:
             break
-        print(doc_index[str(doc_arr[0])])
+        print(count, "-->", doc_index[str(doc_arr[0])])
+        count += 1

@@ -136,7 +136,20 @@ for i in range(len(filenames)):
     json_file.close()
 
 
+with open('lexicon.json', 'w') as outfile:
+    json.dump(lexicon, outfile)
+
+# Erasing Lexicon to free up space
+lexicon.clear()
+
 inverted_index = {}
+
+with open('docIndex.json', 'w') as outfile:
+    json.dump(doc_index, outfile)
+
+# Erasing document index to free up space
+doc_index.clear()
+
 
 
 # Forward Index Syntax:
@@ -181,16 +194,6 @@ for pavilion in forward_index.keys():
 
 with open ('invertedIndex.json', 'w') as outfile:
     json.dump(inverted_index, outfile)
-
-
-with open ('lexicon.json', 'w') as outfile:
-    json.dump(lexicon, outfile)
-
-with open ('forwardIndex.json', 'w') as outfile:
-    json.dump(forward_index, outfile)
-
-with open ('docIndex.json', 'w') as outfile:
-    json.dump(doc_index, outfile)
 
 
 end = time.time()
