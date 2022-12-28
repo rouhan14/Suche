@@ -50,4 +50,14 @@ weight.sort(key=lambda x: x[1])
 
 print(weight)
 
+doc_index_file = open(
+    f'D:\\Sem Projects\\DSA Project\\General Shit\\Suche\\Task 2\\docIndex.json')
 
+doc_index = json.load(doc_index_file)
+doc_index_file.close()
+
+count = 0
+for doc_arr in weight:
+    if count == 15:
+        break
+    print(doc_index[str(doc_arr[0])])

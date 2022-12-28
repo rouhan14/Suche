@@ -33,6 +33,8 @@ lexicon = {}
 
 forward_index = {}
 
+doc_index = {}
+
 lex_id_generator = 0
 
 doc_id = 0
@@ -51,6 +53,9 @@ for i in range(len(filenames)):
     count = 0
 
     for dic in data:
+        # Creating a Document Index so they can be displayed later when searching the documents.
+        doc_index.update({count: dic['title']})
+
         count += 1
 
         if number_of_articles + count == 10000:
@@ -174,15 +179,18 @@ for pavilion in forward_index.keys():
 
 
 
-with open('invertedIndex.json', 'w') as outfile:
+with open ('invertedIndex.json', 'w') as outfile:
     json.dump(inverted_index, outfile)
 
 
-with open('lexicon.json', 'w') as outfile:
+with open ('lexicon.json', 'w') as outfile:
     json.dump(lexicon, outfile)
 
 with open ('forwardIndex.json', 'w') as outfile:
     json.dump(forward_index, outfile)
+
+with open ('docIndex.json', 'w') as outfile:
+    json.dump(doc_index, outfile)
 
 
 end = time.time()
