@@ -60,6 +60,8 @@ for doc_key in forward_data.keys():
         else:
             inverted_index[wordID].append(doc_key)
 
+forward_file.close()
+
 with open('invertedIndex.json', 'w') as outfile:
     json.dump(inverted_index, outfile)
 
