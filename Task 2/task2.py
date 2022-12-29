@@ -88,12 +88,12 @@ for i in range(len(filenames)):
 
         for i in range(len(tokenize_title_less_stop_words)):
             if tokenize_title_less_stop_words[i] in lexicon.keys() and str(lexicon[f'{tokenize_title_less_stop_words[i]}']) not in doc_key[f'{doc_id}'].keys():
-                doc_key[f'{doc_id}'].update({str(lexicon[f'{tokenize_title_less_stop_words[i]}']): wordID_maker(0, 'title')})
+                doc_key[f'{doc_id}'].update({str(lexicon[f'{tokenize_title_less_stop_words[i]}']): [0, 0]})
 
             temp = str(lexicon[f'{tokenize_title_less_stop_words[i]}'])
-            if str(lexicon[f'{tokenize_title_less_stop_words[i]}']) in doc_key[f'{doc_id}'].keys() and 'title' in doc_key[f'{doc_id}'][str(temp)]:
-                val = doc_key[f'{doc_id}'][str(temp)]['title'] + 1
-                doc_key[f'{doc_id}'][str(temp)]['title'] = val
+            if str(lexicon[f'{tokenize_title_less_stop_words[i]}']) in doc_key[f'{doc_id}'].keys():
+                val = doc_key[f'{doc_id}'][str(temp)][0] + 1
+                doc_key[f'{doc_id}'][str(temp)][0] = val
 
             # temp2 = str(lexicon[f'{tokenize_title_less_stop_words[i]}'])
             # if str(lexicon[f'{tokenize_title_less_stop_words[i]}']) in doc_key[f'{doc_id}'].keys() and 'title' in doc_key[f'{doc_id}'][str(temp2)]:
@@ -110,15 +110,18 @@ for i in range(len(filenames)):
         for i in range(len(tokenize_content_less_stop_words)):
 
             if tokenize_content_less_stop_words[i] in lexicon.keys() and str(lexicon[f'{tokenize_content_less_stop_words[i]}']) not in doc_key[f'{doc_id}'].keys():
-                temp = {str(lexicon[f'{tokenize_content_less_stop_words[i]}']): wordID_maker(0, 'content')}
+                temp = {str(lexicon[f'{tokenize_content_less_stop_words[i]}']): [0, 0]}
                 doc_key[f'{doc_id}'].update(temp)
-            else:
-                doc_key[f'{doc_id}'][str(lexicon[f'{tokenize_content_less_stop_words[i]}'])].update(wordID_maker(0, 'content'))
+            # else:
+            #     doc_key[f'{doc_id}'][str(lexicon[f'{tokenize_content_less_stop_words[i]}'])].update(wordID_maker(0, 'c'))
 
             temp = str(lexicon[f'{tokenize_content_less_stop_words[i]}'])
-            if str(lexicon[f'{tokenize_content_less_stop_words[i]}']) in doc_key[f'{doc_id}'].keys() and 'content' in doc_key[f'{doc_id}'][str(temp)]:
-                val = doc_key[f'{doc_id}'][str(temp)]['content'] + 1
-                doc_key[f'{doc_id}'][str(temp)]['content'] = val
+            if str(lexicon[f'{tokenize_content_less_stop_words[i]}']) in doc_key[f'{doc_id}'].keys():
+                val = doc_key[f'{doc_id}'][str(temp)][1] + 1
+                doc_key[f'{doc_id}'][str(temp)][1] = val
+
+                # if temp == '20':
+                #     print(tokenize_content_less_stop_words[i])
 
             # temp2 = str(lexicon[f'{tokenize_content_less_stop_words[i]}'])
             # if str(lexicon[f'{tokenize_content_less_stop_words[i]}']) in doc_key[f'{doc_id}'].keys() and 'content' in doc_key[f'{doc_id}'][str(temp2)]:
@@ -135,7 +138,7 @@ for i in range(len(filenames)):
 
     json_file.close()
 
-print(len(doc_index))
+# print(len(doc_index))
 
 with open('lexicon.json', 'w') as outfile:
     json.dump(lexicon, outfile)
@@ -163,16 +166,16 @@ for pavilion in forward_index.keys():
         word_barrel = {}
 
         if wordID not in inverted_index.keys():
-            if 'title' in forward_index[pavilion][wordID]:
-                word_barrel = {wordID: { pavilion: { 'title': forward_index[pavilion][wordID]['title']}}}
+            if forward_index[pavilion][wordID][0] != 0:
+                word_barrel = {wordID: { pavilion: [forward_index[pavilion][wordID][0], 0]}}
                 inverted_index.update(word_barrel)
-            if 'content' in forward_index[pavilion][wordID]:
-                if 'title' not in forward_index[pavilion][wordID]:
-                    word_barrel = {wordID: { pavilion: { 'content': forward_index[pavilion][wordID]['content']}}}
+            if forward_index[pavilion][wordID][1] != 0:
+                if forward_index[pavilion][wordID][0] == 0:
+                    word_barrel = {wordID: { pavilion: [0, forward_index[pavilion][wordID][1]]}}
                     inverted_index.update(word_barrel)
                 else:
-                    temp = { 'content': forward_index[pavilion][wordID]['content'] }
-                    word_barrel[wordID][pavilion].update(temp)
+                    temp = forward_index[pavilion][wordID][1]
+                    word_barrel[wordID][pavilion][1] = temp
 
 
 
@@ -185,14 +188,16 @@ for pavilion in forward_index.keys():
             #     inverted_index[wordID].update({pavilion: { forward_index[pavilion][wordID]['type']: forward_index[pavilion][wordID]['hits']}})
             # else:
             #     inverted_index[wordID].update( {pavilion: { 'content': forward_index[pavilion][wordID]['hits']}} )
-            if 'title' in forward_index[pavilion][wordID]:
-                inverted_index[wordID].update({pavilion: {'title': forward_index[pavilion][wordID]['title']}})
-            if 'content' in forward_index[pavilion][wordID]:
-                inverted_index[wordID].update({pavilion: {'content': forward_index[pavilion][wordID]['content']}})
+            if forward_index[pavilion][wordID][0] != 0:
+                inverted_index[wordID][pavilion] = forward_index[pavilion][wordID][0]
+            if forward_index[pavilion][wordID][1] != 0:
+                # inverted_index[wordID].update({pavilion: {'c': forward_index[pavilion][wordID][1]}})
+                inverted_index[wordID][pavilion] = [0, forward_index[pavilion][wordID][1]]
 
 
-with open('forwardIndex.json', 'w') as outfile:
-    json.dump(forward_index, outfile)
+
+# with open('forwardIndex.json', 'w') as outfile:
+#     json.dump(forward_index, outfile)
 
 # Clearing forward index to make some space in RAM
 forward_index.clear()
